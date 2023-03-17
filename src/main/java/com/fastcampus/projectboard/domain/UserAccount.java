@@ -11,17 +11,17 @@ import java.util.Objects;
 @ToString
 @Table(indexes = {
         @Index(columnList = "userId"),
-        @Index(columnList = "email, unique = true"),
+        @Index(columnList = "email", unique = true),
         @Index(columnList = "createdAt"),
-        @Index(columnList = "createdBy"),
+        @Index(columnList = "createdBy")
 })
 @Entity
-public class UserAccount extends AuditingFields{
+public class UserAccount extends AuditingFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter @Column(nullable = false, length = 50) private String userid;
+    @Setter @Column(nullable = false, length = 50) private String userId;
     @Setter @Column(nullable = false) private String userPassword;
 
     @Setter @Column(length = 100) private String email;
@@ -29,13 +29,13 @@ public class UserAccount extends AuditingFields{
     @Setter private String memo;
 
 
-    protected UserAccount(){}
+    protected UserAccount() {}
 
-    private UserAccount(String userid, String userPassword, String email, String nickname, String memo){
-        this.userid = userid;
+    private UserAccount(String userId, String userPassword, String email, String nickname, String memo) {
+        this.userId = userId;
         this.userPassword = userPassword;
         this.email = email;
-        this.nickname =nickname;
+        this.nickname = nickname;
         this.memo = memo;
     }
 
@@ -54,6 +54,5 @@ public class UserAccount extends AuditingFields{
     public int hashCode() {
         return Objects.hash(id);
     }
-
 
 }
