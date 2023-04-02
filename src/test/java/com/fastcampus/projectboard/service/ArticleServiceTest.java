@@ -66,7 +66,7 @@ class ArticleServiceTest {
         then(articleRepository).should().findByTitleContaining(searchKeyword, pageable);
     }
 
-    @DisplayName("검색어와 함께 게시글을 해시태그 검색하면, 빈 페이지를 반환한다.")
+    @DisplayName("검색어 없이 게시글을 해시태그 검색하면, 빈 페이지를 반환한다.")
     @Test
     void givenNoSearchParameters_whenSearchingArticlesViaHashtag_thenReturnsEmptyPage() {
         // Given
@@ -78,8 +78,9 @@ class ArticleServiceTest {
         // Then
         assertThat(articles).isEqualTo(Page.empty(pageable));
         then(articleRepository).shouldHaveNoInteractions();
+    }
 
-    }@DisplayName("게시글을 해시태그 검색하면, 게시글 페이지를 반환한다.")
+    @DisplayName("게시글을 해시태그 검색하면, 게시글 페이지를 반환한다.")
     @Test
     void givenHashtag_whenSearchingArticlesViaHashtag_thenReturnsArticlesPage() {
         // Given
@@ -207,20 +208,21 @@ class ArticleServiceTest {
         then(articleRepository).should().count();
     }
 
-    @DisplayName("해시태그를 조회하면 유니크 해시태그 리스트를 반환한다")
+    @DisplayName("해시태그를 조회하면, 유니크 해시태그 리스트를 반환한다")
     @Test
-    void givenNothing_whenCalling_thenReturnsHashtags(){
+    void givenNothing_whenCalling_thenReturnsHashtags() {
         // Given
-        List<String> expectedHashtags = List.of("#java","#spring","#boot");
+        List<String> expectedHashtags = List.of("#java", "#spring", "#boot");
         given(articleRepository.findAllDistinctHashtags()).willReturn(expectedHashtags);
 
-        //When
+        // When
         List<String> actualHashtags = sut.getHashtags();
 
         // Then
         assertThat(actualHashtags).isEqualTo(expectedHashtags);
         then(articleRepository).should().findAllDistinctHashtags();
     }
+
 
     private UserAccount createUserAccount() {
         return UserAccount.of(
@@ -259,7 +261,6 @@ class ArticleServiceTest {
 
     private UserAccountDto createUserAccountDto() {
         return UserAccountDto.of(
-                1L,
                 "uno",
                 "password",
                 "uno@mail.com",
