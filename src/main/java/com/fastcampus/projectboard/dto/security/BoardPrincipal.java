@@ -6,7 +6,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.management.relation.Role;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,14 +28,15 @@ public record BoardPrincipal(
                 roleTypes.stream()
                         .map(RoleType::getName)
                         .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toUnmodifiableSet()),
+                        .collect(Collectors.toUnmodifiableSet())
+                ,
                 email,
                 nickname,
                 memo
         );
     }
 
-    public static BoardPrincipal from(UserAccountDto dto){
+    public static BoardPrincipal from(UserAccountDto dto) {
         return BoardPrincipal.of(
                 dto.userId(),
                 dto.userPassword(),
@@ -46,7 +46,7 @@ public record BoardPrincipal(
         );
     }
 
-    public UserAccountDto toDto(){
+    public UserAccountDto toDto() {
         return UserAccountDto.of(
                 username,
                 password,
@@ -56,50 +56,23 @@ public record BoardPrincipal(
         );
     }
 
-    @Override
-    public String getUsername() {
-        return username;
-    }
+
+    @Override public String getUsername() { return username; }
+    @Override public String getPassword() { return password; }
+    @Override public Collection<? extends GrantedAuthority> getAuthorities() { return authorities; }
+
+    @Override public boolean isAccountNonExpired() { return true; }
+    @Override public boolean isAccountNonLocked() { return true; }
+    @Override public boolean isCredentialsNonExpired() { return true; }
+    @Override public boolean isEnabled() { return true; }
 
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    public enum RoleType{
+    public enum RoleType {
         USER("ROLE_USER");
 
-        @Getter
-        private final String name;
+        @Getter private final String name;
 
-        RoleType(String name){
+        RoleType(String name) {
             this.name = name;
         }
     }
